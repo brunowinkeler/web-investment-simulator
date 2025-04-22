@@ -18,43 +18,33 @@ ChartJS.register(CategoryScale, LinearScale, PointElement, LineElement, Title, T
 const ResultsChart = ({ scenarios }) => {
     if (!scenarios || scenarios.length === 0) return null;
 
+    const maxMonths = Math.max(...scenarios.map(s => s.data.length));
+    const labels = Array.from({ length: maxMonths }, (_, i) => i + 1);
+
     const chartData = {
-        labels: Array.from({ length: Math.max(...scenarios.map(s => s.data.length)) }, (_, i) => i + 1),
-        datasets: scenarios.flatMap((scenario, index) => [
+        labels,
+        datasets: scenarios.flatMap((scenario, idx) => [
             {
                 label: `Invested – ${scenario.label}`,
-                data: scenario.data.map((entry) => entry.totalInvested),
-                borderColor: index === 0 ? "#0d6efd" : "#6610f2",
-                backgroundColor: index === 0 ? "#0d6efd44" : "#6610f244",
+                data: scenario.data.map(d => d.totalInvested),
+                borderColor: idx === 0 ? "#0d6efd" : "#6610f2",
+                backgroundColor: idx === 0 ? "#0d6efd44" : "#6610f244",
                 tension: 0.2,
             },
             {
                 label: `Total Value – ${scenario.label}`,
-                data: scenario.data.map((entry) => entry.totalValue),
-                borderColor: index === 0 ? "#198754" : "#dc3545",
-                backgroundColor: index === 0 ? "#19875444" : "#dc354544",
+                data: scenario.data.map(d => d.totalValue),
+                borderColor: idx === 0 ? "#198754" : "#dc3545",
+                backgroundColor: idx === 0 ? "#19875444" : "#dc354544",
                 tension: 0.2,
             },
         ]),
     };
 
-    const options = {
-        responsive: true,
-        plugins: {
-            legend: {
-                position: "top",
-            },
-            title: {
-                display: true,
-                text: "Investment Growth Comparison",
-            },
-        },
-    };
-
     return (
-        <Card>
+        <Card className="mb-5">
             <Card.Body>
-                <Line data={chartData} options={options} />
+                <Line data={chartData} options={{ responsive: true, plugins: { legend: { position: "top" }, title: { display: true, text: "Investment Growth Comparison" } } }} />
             </Card.Body>
         </Card>
     );

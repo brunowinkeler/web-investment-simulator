@@ -1,12 +1,8 @@
+
 import React, { useState } from "react";
 import { Card, Form, Button, Row, Col } from "react-bootstrap";
 
-const InvestmentForm = ({
-    id,
-    defaultValues,
-    onCalculate,
-    onRemove,
-}) => {
+const InvestmentForm = ({ id, defaultValues, onCalculate, onRemove }) => {
     const [form, setForm] = useState({ ...defaultValues });
 
     const handleChange = (e) => {
@@ -33,7 +29,6 @@ const InvestmentForm = ({
             >
                 🗑️
             </Button>
-
             <Card.Body>
                 <Form onSubmit={handleSubmit}>
                     <Row className="mb-3">
@@ -62,7 +57,6 @@ const InvestmentForm = ({
                             </Form.Group>
                         </Col>
                     </Row>
-
                     <Row className="mb-3">
                         <Col md>
                             <Form.Group>
@@ -81,7 +75,8 @@ const InvestmentForm = ({
                         <Col md>
                             <Form.Group>
                                 <Form.Label>
-                                    Interest Rate (% per {form.timeUnit === "years" ? "year" : "month"})
+                                    Interest Rate (% per{" "}
+                                    {form.timeUnit === "years" ? "year" : "month"})
                                 </Form.Label>
                                 <Form.Control
                                     type="number"
@@ -94,7 +89,6 @@ const InvestmentForm = ({
                             </Form.Group>
                         </Col>
                     </Row>
-
                     <Row className="mb-3">
                         <Col md>
                             <Form.Group>
@@ -123,7 +117,6 @@ const InvestmentForm = ({
                             </Form.Group>
                         </Col>
                     </Row>
-
                     <Row className="mb-3">
                         <Col md>
                             <Form.Group>
@@ -141,7 +134,6 @@ const InvestmentForm = ({
                             </Form.Group>
                         </Col>
                     </Row>
-
                     <Button variant="primary" type="submit">
                         Simulate
                     </Button>
