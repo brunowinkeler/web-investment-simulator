@@ -5,11 +5,23 @@ export const calculateCompoundInterest = ({
     interestRate,
     interestType,
     timeUnit,
+    capitalization,
 }) => {
     const result = [];
 
     const months = timeUnit === "years" ? duration * 12 : duration;
-    const monthlyRate = timeUnit === "years" ? (Math.pow(1 + interestRate / 100, 1 / 12) - 1) * 100 : interestRate;
+
+    const monthlyRate = timeUnit === "years"
+        ? (Math.pow(1 + interestRate / 100, 1 / 12) - 1) * 100
+        : interestRate;
+
+    const capFreqMap = {
+        monthly: 1,
+        bimonthly: 2,
+        quarterly: 3,
+        yearly: 12,
+    };
+    const capEvery = capFreqMap[capitalization] || 1;
 
     let totalValue = initialAmount;
     let totalInvested = initialAmount;
@@ -18,11 +30,14 @@ export const calculateCompoundInterest = ({
         totalInvested = initialAmount + monthlyContribution * month;
 
         if (interestType === "compound") {
-            totalValue = totalValue * (1 + monthlyRate / 100) + monthlyContribution;
+            if (month % capEvery === 0) {
+                totalValue = totalValue * (1 + monthlyRate / 100);
+            }
+            totalValue += monthlyContribution;
         } else if (interestType === "simple") {
-            const interest = (initialAmount * (monthlyRate / 100) * month);
-            const contributionInterest = (monthlyContribution * (month * (month + 1)) / 2) * (monthlyRate / 100);
-            totalValue = totalInvested + interest + contributionInterest;
+            const interest = (initialAmount * (monthlyRate / 100) * month) * (1 / capEvery);
+            const contribInterest = (monthlyContribution * (month * (month + 1)) / 2) * (monthlyRate / 100) * (1 / capEvery);
+            totalValue = totalInvested + interest + contribInterest;
         }
 
         result.push({

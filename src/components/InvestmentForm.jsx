@@ -7,19 +7,16 @@ const InvestmentForm = ({
     onCalculate,
     onRemove,
 }) => {
-    // Local form state
     const [form, setForm] = useState({ ...defaultValues });
 
-    // Handle input changes, keep strings for select fields
     const handleChange = (e) => {
         const { name, value } = e.target;
-        const parsed = name === "interestType" || name === "timeUnit"
+        const parsed = ["interestType", "timeUnit", "capitalization"].includes(name)
             ? value
             : Number(value);
         setForm({ ...form, [name]: parsed });
     };
 
-    // Submit handler passes form + id back to App
     const handleSubmit = (e) => {
         e.preventDefault();
         onCalculate(form, id);
@@ -27,7 +24,6 @@ const InvestmentForm = ({
 
     return (
         <Card className="mb-4 position-relative">
-            {/* Delete button top‑right */}
             <Button
                 variant="outline-danger"
                 size="sm"
@@ -123,6 +119,24 @@ const InvestmentForm = ({
                                 >
                                     <option value="months">Months</option>
                                     <option value="years">Years</option>
+                                </Form.Select>
+                            </Form.Group>
+                        </Col>
+                    </Row>
+
+                    <Row className="mb-3">
+                        <Col md>
+                            <Form.Group>
+                                <Form.Label>Capitalization Frequency</Form.Label>
+                                <Form.Select
+                                    name="capitalization"
+                                    value={form.capitalization}
+                                    onChange={handleChange}
+                                >
+                                    <option value="monthly">Monthly</option>
+                                    <option value="bimonthly">Bimonthly</option>
+                                    <option value="quarterly">Quarterly</option>
+                                    <option value="yearly">Yearly</option>
                                 </Form.Select>
                             </Form.Group>
                         </Col>
